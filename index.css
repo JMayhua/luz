@@ -1,0 +1,94 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffebee;
+}
+
+/* Fondo animado con corazones */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('corazones.png') repeat;
+    animation: caerCorazones 10s linear infinite;
+    z-index: -1;
+}
+
+@keyframes caerCorazones {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(100%);
+    }
+}
+
+/* Contenedor principal */
+.container {
+    text-align: center;
+    z-index: 1;
+}
+
+/* Título y mensaje */
+h1 {
+    font-size: 3rem;
+    color: #d32f2f;
+    animation: aparecer 2s ease-in-out;
+}
+
+p {
+    font-size: 1.5rem;
+    color: #c2185b;
+    animation: aparecer 3s ease-in-out;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Botón */
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #e91e63;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #c2185b;
+}
+
+/* Sorpresa oculta */
+.hidden {
+    display: none;
+}
+
+#sorpresa {
+    margin-top: 20px;
+}
+
+#sorpresa img {
+    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Quieres ser mi San Valentín?</title>
+  <style>
+    /* Estilos generales */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: 'Pacifico', cursive;
+      background: linear-gradient(-45deg, #c3ff7e, #ffb375, #5ba8ff, #135326);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Animación del fondo */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Animación de corazones flotantes */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-20px) rotate(5deg); }
+      50% { transform: translateY(0) rotate(0deg); }
+      75% { transform: translateY(-10px) rotate(-5deg); }
+    }
+
+    @keyframes scale {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hearts span {
+      position: absolute;
+      font-size: clamp(20px, 4vw, 24px);
+      animation: float 6s infinite ease-in-out;
+      opacity: 0.8;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Contenedor principal */
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      animation: fadeIn 2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: clamp(32px, 6vw, 48px);
+      margin-bottom: clamp(20px, 4vw, 30px);
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+      animation: scale 3s infinite ease-in-out;
+      padding: 0 15px;
+    }
+
+    .gif-container {
+      margin: 20px auto;
+      position: relative;
+      width: min(300px, 90vw);
+      height: min(300px, 90vw);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .gif-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: clamp(15px, 3vw, 30px);
+      margin-top: clamp(20px, 4vw, 40px);
+      flex-wrap: wrap;
+      padding: 0 15px;
+    }
+
+    button {
+      padding: clamp(12px, 2vw, 15px) clamp(30px, 5vw, 40px);
+      font-size: clamp(20px, 4vw, 24px);
+      font-family: 'Pacifico', cursive;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      min-width: clamp(160px, 30vw, 200px);
+    }
+
+    button:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    button:hover:before {
+      width: 300px;
+      height: 300px;
+    }
+
+    #si {
+      background: linear-gradient(45deg, #ff3b3b, #ff6b6b);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255,59,59,0.3);
+    }
+
+    #no {
+      background: linear-gradient(45deg, #808080, #a0a0a0);
+      color: white;
+      box-shadow: 0 4px 15px rgba(128,128,128,0.3);
+    }
+
+    button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    /* Estilos del botón de música */
+    .music-button {
+      position: fixed;
+      bottom: clamp(10px, 2vw, 20px);
+      right: clamp(10px, 2vw, 20px);
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(20px, 4vw, 24px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .music-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Media queries específicas */
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      button {
+        width: 100%;
+        max-width: 250px;
+      }
+    }
+
+    @media (max-height: 600px) {
+      .container {
+        padding-top: 10px;
+      }
+
+      .gif-container {
+        margin: 10px auto;
+      }
+
+      h1 {
+        margin-bottom: 15px;
+      }
+    }
+
+    /* Para pantallas muy pequeñas */
+    @media (max-width: 320px) {
+      h1 {
+        font-size: 28px;
+      }
+
+      .gif-container {
+        width: 200px;
+        height: 200px;
+      }
+
+      button {
+        padding: 10px 25px;
+        font-size: 18px;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- El resto del HTML permanece igual -->
+  <div class="hearts">
+    <span style="left: 5%; top: 5%; animation-delay: 0s;">❤️</span>
+    <span style="left: 15%; top: 15%; animation-delay: 1s;">💖</span>
+    <span style="left: 25%; top: 25%; animation-delay: 2s;">💕</span>
+    <span style="left: 35%; top: 35%; animation-delay: 3s;">💘</span>
+    <span style="left: 45%; top: 45%; animation-delay: 4s;">💓</span>
+    <span style="left: 55%; top: 55%; animation-delay: 5s;">💞</span>
+    <span style="left: 65%; top: 65%; animation-delay: 6s;">💗</span>
+    <span style="left: 75%; top: 75%; animation-delay: 7s;">💝</span>
+    <span style="left: 85%; top: 85%; animation-delay: 8s;">💟</span>
+    <span style="left: 95%; top: 95%; animation-delay: 9s;">❤️</span>
+    <span style="left: 10%; top: 90%; animation-delay: 1.5s;">💖</span>
+    <span style="left: 20%; top: 80%; animation-delay: 2.5s;">💕</span>
+    <span style="left: 80%; top: 20%; animation-delay: 3.5s;">💘</span>
+    <span style="left: 90%; top: 10%; animation-delay: 4.5s;">💓</span>
+  </div>
+
+  <div class="container">
+    <h1>¿Quieres ser mi San Valentín?</h1>
+    <div class="gif-container">
+      <img src="holi.gif" alt="GIF animado">
+    </div>
+    <div class="buttons">
+      <button id="si">¡Sí!</button>
+      <button id="no">No</button>
+    </div>
+  </div>
+
+  <button class="music-button" id="musicButton">🎵</button>
+
+  <audio id="backgroundMusic" autoplay loop preload="auto" muted>
+    <source src="musica.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+
+  <script>
+    // El JavaScript permanece igual ya que no requiere cambios para la responsividad
+    document.addEventListener('DOMContentLoaded', function() {
+        const music = document.getElementById('backgroundMusic');
+        const musicButton = document.getElementById('musicButton');
+        let isMusicPlaying = false;
+
+        function attemptPlay() {
+            music.muted = false;
+            music.volume = 0.5;
+            
+            let playPromise = music.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log('Reproducción automática exitosa');
+                    musicButton.textContent = '🎵';
+                    isMusicPlaying = true;
+                })
+                .catch(error => {
+                    console.log('Error en reproducción automática:', error);
+                    setupUserInteractionPlay();
+                });
+            }
+        }
+
+        function setupUserInteractionPlay() {
+            const playOnInteraction = function() {
+                music.play().then(() => {
+                    isMusicPlaying = true;
+                    musicButton.textContent = '🎵';
+                });
+                document.removeEventListener('click', playOnInteraction);
+                document.removeEventListener('touchstart', playOnInteraction);
+                document.removeEventListener('keydown', playOnInteraction);
+            };
+
+            document.addEventListener('click', playOnInteraction);
+            document.addEventListener('touchstart', playOnInteraction);
+            document.addEventListener('keydown', playOnInteraction);
+        }
+
+        musicButton.addEventListener('click', function() {
+            if (isMusicPlaying) {
+                music.pause();
+                musicButton.textContent = '🔇';
+                isMusicPlaying = false;
+            } else {
+                music.play().then(() => {
+                    isMusicPlaying = true;
+                    musicButton.textContent = '🎵';
+                });
+            }
+        });
+
+        attemptPlay();
+        window.addEventListener('focus', attemptPlay);
+    });
+
+    document.getElementById('si').addEventListener('click', () => {
+        const hearts = document.querySelector('.hearts');
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement('span');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.top = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            hearts.appendChild(heart);
+        }
+        setTimeout(() => {
+            window.location.href = 'index2.html';
+        }, 1000);
+    });
+
+    document.getElementById('no').addEventListener('click', () => {
+        window.location.href = 'error.html';
+    });
+
+    function createRandomHeart() {
+        const heart = document.createElement('span');
+        const hearts = ['❤️', '💖', '💕', '💘', '💓', '💞', '💗', '💝', '💟'];
+        heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.top = '-20px';
+        heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+        document.querySelector('.hearts').appendChild(heart);
+        
+        setTimeout(() => {
+            heart.remove();
+        }, 7000);
+    }
+
+    setInterval(createRandomHeart, 3000);
+  </script>
+</body>
+</html>

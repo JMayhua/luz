@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gracias ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Pacifico', cursive;
+            overflow-x: hidden;
+            padding: clamp(10px, 3vw, 30px);
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-top: clamp(20px, 5vh, 50px);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: floating 3s ease-in-out infinite;
+            padding: 0 15px;
+        }
+
+        h3 {
+            color: white;
+            text-align: center;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-top: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(15px, 3vw, 30px);
+            padding: clamp(10px, 2vw, 20px);
+            width: 100%;
+            max-width: 600px;
+            margin-top: clamp(10px, 2vh, 20px);
+        }
+
+        .message-container {
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .gift-box {
+            width: clamp(150px, 40vw, 200px);
+            height: clamp(150px, 40vw, 200px);
+            background: url('https://cdn-icons-png.flaticon.com/512/4213/4213958.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1);
+        }
+
+        .gift-box.opened {
+            animation: openBox 1s forwards;
+        }
+
+        @keyframes openBox {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(0) rotate(720deg); }
+        }
+
+        .buttons-container {
+            display: none;
+            flex-direction: column;
+            gap: clamp(10px, 2vw, 20px);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .show-buttons {
+            display: flex;
+            animation: showButtons 0.5s forwards;
+        }
+
+        @keyframes showButtons {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .message-button {
+            padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Pacifico', cursive;
+            width: 100%;
+        }
+
+        .message-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .message {
+            display: none;
+            padding: clamp(15px, 3vw, 20px);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: clamp(250px, 80%, 500px);
+            text-align: center;
+            animation: showMessage 0.5s forwards;
+            position: relative;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+
+        #message1 {
+            background: linear-gradient(135deg, #FF9A9E, #FAD0C4);
+            color: #444;
+        }
+
+        #message2 {
+            background: linear-gradient(135deg, #A1C4FD, #C2E9FB);
+            color: #444;
+        }
+
+        #message3 {
+            background: linear-gradient(135deg, #D4FC79, #96E6A1);
+            color: #444;
+        }
+
+        @keyframes showMessage {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-message {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: none;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            cursor: pointer;
+            color: #444;
+            padding: 5px 10px;
+        }
+
+        .close-message:hover {
+            color: #000;
+        }
+
+        @media (max-width: 480px) {
+            .content-container {
+                gap: 15px;
+            }
+            .message {
+                width: 90%;
+                padding: 15px;
+            }
+            .message-button {
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            h1 {
+                margin-top: 15px;
+            }
+            .content-container {
+                gap: 10px;
+            }
+            .message-container {
+                min-height: 100px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .gift-box {
+                width: 120px;
+                height: 120px;
+            }
+            .message {
+                width: 95%;
+                padding: 12px;
+            }
+            .message-button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Elemento de audio -->
+    <audio id="bgMusic" loop>
+        <!-- Reemplaza esta URL con la URL de tu archivo de música -->
+        <source src="music.mp3" type="audio/mp3">
+    </audio>
+    
+    <!-- Botón de control de música -->
+    <button class="music-control" onclick="toggleMusic()">
+        <i id="musicIcon" class="fas fa-volume-up"></i>
+    </button>
+
+    <h1>Gracias, me hiciste el chico más feliz ❤️</h1>
+    <h3>Toca el regalito jeje</h3>
+    
+    <div class="content-container">
+        <div class="message-container">
+            <div id="message1" class="message">
+                <button class="close-message" onclick="closeMessage(1)">×</button>
+                <p>Desde que te conocí, mi vida se llenó de colores y sonrisas. Cada día a tu lado es una nueva aventura.</p>
+            </div>
+
+            <div id="message2" class="message">
+                <button class="close-message" onclick="closeMessage(2)">×</button>
+                <p>Hablar contigo es tan bello, quisiera seguir hablando mas y mas contigo.</p>
+            </div>
+
+            <div id="message3" class="message">
+                <button class="close-message" onclick="closeMessage(3)">×</button>
+                <p>Pueda que no nos conoscamos en persona, pero, sería hermoso verte .</p>
+            </div>
+        </div>
+
+        <div class="gift-box" onclick="openGift()"></div>
+        
+        <div class="buttons-container">
+            <button class="message-button" onclick="showMessage(1)">Mensaje Especial 1</button>
+            <button class="message-button" onclick="showMessage(2)">Mensaje Especial 2</button>
+            <button class="message-button" onclick="showMessage(3)">Mensaje Especial 3</button>
+            <button class="message-button" onclick="window.location.href='index3.html'">Sorpresa Final ✨</button>
+        </div>
+    </div>
+
+    <script>
+        // Reproducir música al cargar la página
+        window.onload = function() {
+            const music = document.getElementById('bgMusic');
+            // Intentamos reproducir la música
+            var promise = music.play();
+            
+            if (promise !== undefined) {
+                promise.catch(function(error) {
+                    console.log("Autoplay prevented");
+                });
+            }
+        }
+
+        // Controlar la música
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const icon = document.getElementById('musicIcon');
+            
+            if (music.paused) {
+                music.play();
+                icon.className = 'fas fa-volume-up';
+            } else {
+                music.pause();
+                icon.className = 'fas fa-volume-mute';
+            }
+        }
+
+        function openGift() {
+            const giftBox = document.querySelector('.gift-box');
+            const buttonsContainer = document.querySelector('.buttons-container');
+            
+            giftBox.classList.add('opened');
+            
+            setTimeout(() => {
+                giftBox.style.display = 'none';
+                buttonsContainer.classList.add('show-buttons');
+            }, 1000);
+        }
+
+        function showMessage(messageNum) {
+            // Ocultar todos los mensajes primero
+            document.querySelectorAll('.message').forEach(msg => {
+                msg.style.display = 'none';
+            });
+            
+            // Mostrar el mensaje seleccionado
+            const message = document.getElementById(`message${messageNum}`);
+            message.style.display = 'block';
+        }
+
+        function closeMessage(messageNum) {
+            const message = document.getElementById(`message${messageNum}`);
+            message.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

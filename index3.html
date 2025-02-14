@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libro Romántico Animado</title>
+    <!-- React y Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Estilos personalizados -->
+    <style>
+        /* Estilos para el libro */
+        .book-container {
+            perspective: 1000px;
+        }
+
+        .book {
+            transform-style: preserve-3d;
+            transition: all 0.8s ease;
+            cursor: pointer;
+        }
+
+        .book.closed {
+            width: 300px;
+            height: 300px;
+        }
+
+        .book.open {
+            width: 200px;
+            height: 200px;
+        }
+
+        .book-cover {
+            background: linear-gradient(45deg, #8b4513 25%, #a0522d 25%, #a0522d 50%, #8b4513 50%, #8b4513 75%, #a0522d 75%);
+            background-size: 20px 20px;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform-origin: left;
+            transition: transform 0.8s ease;
+            border-radius: 5px;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .book.open .book-cover {
+            transform: rotateY(-180deg);
+        }
+
+        .book-content {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            display: flex;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .book.open .book-content {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0.4s;
+        }
+
+        .book-page {
+            background: #fff9f5;
+            width: 50%;
+            height: 100%;
+            padding: 0.75rem;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .closed-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-family: serif;
+            backface-visibility: hidden;
+        }
+
+        /* Estilos para los corazones */
+        .heart {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            margin: 0 10px;
+            transform-origin: center;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 32px;
+            border-radius: 32px 32px 0 0;
+            background-color: #ff4b6f;
+            transform-origin: 100% 100%;
+        }
+
+        .heart::before {
+            left: 20px;
+            transform: rotate(-45deg);
+        }
+
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        .hearts-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* Estilos para las tarjetas */
+        .cards-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            perspective: 1000px;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            animation: dealCards 1s ease-out backwards;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            transform: rotateY(180deg);
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(0deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotate(-45deg);
+            background-color: rgb(199, 52, 52);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-front:before,
+        .card-front:after,
+        .card-back:before,
+        .card-back:after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background-color: red;
+            width: 120px;
+            height: 120px;
+        }
+
+        .card-front:before,
+        .card-back:before {
+            top: -60px;
+            left: 0;
+        }
+
+        .card-front:after,
+        .card-back:after {
+            top: 0;
+            left: 60px;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card-text {
+            transform: rotate(45deg);
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            font-family: 'Pacifico', cursive;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes dealCards {
+            0% { opacity: 0; transform: translateY(-100vh) rotate(-540deg); }
+            100% { opacity: 1; transform: translateY(0) rotate(0); }
+        }
+
+        @media (max-width: 768px) {
+            .cards-wrapper {
+                flex-direction: column;
+            }
+
+            .cards-container {
+                flex-direction: column;
+            }
+
+            .card {
+                width: 100px;
+                height: 100px;
+            }
+
+            .card-front:before,
+            .card-front:after,
+            .card-back:before,
+            .card-back:after {
+                width: 100px;
+                height: 100px;
+            }
+
+            .card-front:before,
+            .card-back:before {
+                top: -50px;
+            }
+
+            .card-front:after,
+            .card-back:after {
+                left: 50px;
+            }
+        }
+
+        /* Estilos para las flores */
+        .flowers-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding-bottom: 20px;
+            background: #1a1a1a;
+            width: 100%;
+        }
+
+        .sunflower {
+            position: relative;
+            width: 100px;
+            height: 200px;
+            animation: flower-sway 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes flower-sway {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+
+        .flower_wrapper {
+            position: absolute;
+            left: 50%;
+            bottom: 2vmin;
+        }
+
+        .flower_stem {
+            width: 2vmin;
+            height: 65vmin;
+            background-image: linear-gradient(to left top, #82ff86 20%, #144425, #104e1c);
+            border-radius: 4vmin;
+        }
+
+        .flower_center {
+            position: absolute;
+            top: 0vmin;
+            left: 50%;
+            z-index: 5;
+            transform: translateX(-50%) rotate(-10deg);
+            width: 20vmin;
+            height: 20vmin;
+            border-radius: 50%;
+            background: radial-gradient(circle, #000, #ff5e00);
+            animation: open-flower-middle 2s 0.4s backwards;
+        }
+
+        .flower_petal {
+            position: absolute;
+            left: 50%;
+            z-index: 3;
+            bottom: 55vmin;
+            transform: translateX(-50%);
+            width: 7vmin;
+            height: 20vmin;
+            background: radial-gradient(circle, #ff0000, #ff0015e0);
+            clip-path: ellipse(50% 50% at 50% 50%);
+            transform-origin: center bottom;
+            animation: open-flower 2s 1s backwards;
+        }
+
+        .flower_petal-1 {
+            border-radius: 50% 50% 50% / 80% 80% 20% 20%;
+            animation: open-flower 1.4s 1s backwards;
+        }
+        .flower_petal-2 { transform: translateX(-50%) rotate(-30deg); }
+        .flower_petal-3 { transform: translateX(-50%) rotate(-60deg); }
+        .flower_petal-4 { transform: translateX(-50%) rotate(-90deg); }
+        .flower_petal-5 { transform: translateX(-50%) rotate(-120deg); }
+        .flower_petal-6 { transform: translateX(-50%) rotate(-150deg); }
+        .flower_petal-7 { transform: translateX(-50%) rotate(30deg); }
+        .flower_petal-8 { transform: translateX(-50%) rotate(60deg); }
+        .flower_petal-9 { transform: translateX(-50%) rotate(90deg); }
+        .flower_petal-10 { transform: translateX(-50%) rotate(120deg); }
+        .flower_petal-11 { transform: translateX(-50%) rotate(150deg); }
+        .flower_petal-12 { transform: translateX(-50%) rotate(180deg); }
+
+        .flower_leaf {
+            position: absolute;
+            left: 60%;
+            bottom: 18vmin;
+            transform: translateX(-45%) rotate(80deg);
+            width: 7vmin;
+            height: 17vmin;
+            background: radial-gradient(circle, #82ff86, #104e1c);
+            clip-path: none;
+            border-radius: 10vmin 2vmin 10vmin 2vmin;
+            transform-origin: center bottom;
+        }
+
+        .flower_leaf-1 {
+            bottom: 18vmin;
+            transform: translateX(-45%) rotate(80deg);
+        }
+
+        .flower_leaf-2 {
+            bottom: 23vmin;
+            transform: translateX(-55%) rotate(-80deg);
+        }
+
+        @keyframes open-flower {
+            0% { transform: translateX(-50%) rotate(0); }
+        }
+
+        @keyframes open-flower-middle {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) scale(0);
+            }
+        }
+
+        /* Estilos para el control de música */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-pink-100">
+    <!-- Elemento de audio -->
+    <audio id="backgroundMusic" loop>
+        <source src="tu.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <!-- Botón para controlar la música -->
+    <div class="music-control" onclick="toggleMusic()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="21" cy="16" r="3"></circle>
+        </svg>
+    </div>
+    
+    <div id="root"></div>
+    <div class="back">
+        <div>Toca los <br>corazones</div>
+        <div class="cards-wrapper">
+            <div class="cards-container">
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <span class="card-text">Eres</span>
+                        </div>
+                        <div class="card-back">
+                            <span class="card-text">♥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <span class="card-text">Una</span>
+                        </div>
+                        <div class="card-back">
+                            <span class="card-text">♥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <span class="card-text">Chica </span>
+                        </div>
+                        <div class="card-back">
+                            <span class="card-text">
+                                ♥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <span class="card-text">Maravillosa</span>
+                        </div>
+                        <div class="card-back">
+                            <span class="card-text">♥</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+<br><br><br><br><br><br><br><br><br>
+    <!-- Flores animadas -->
+    <div class="flowers-container">
+        <div class="sunflower">
+            <div class="flower_wrapper">
+                <div class="flower_stem"></div>
+                <div class="flower_center"></div>
+                <div class="flower_petal flower_petal-1"></div>
+                <div class="flower_petal flower_petal-2"></div>
+                <div class="flower_petal flower_petal-3"></div>
+                <div class="flower_petal flower_petal-4"></div>
+                <div class="flower_petal flower_petal-5"></div>
+                <div class="flower_petal flower_petal-6"></div>
+                <div class="flower_petal flower_petal-7"></div>
+                <div class="flower_petal flower_petal-8"></div>
+                <div class="flower_petal flower_petal-9"></div>
+                <div class="flower_petal flower_petal-10"></div>
+                <div class="flower_petal flower_petal-11"></div>
+                <div class="flower_petal flower_petal-12"></div>
+                <div class="flower_leaf flower_leaf-1"></div>
+                <div class="flower_leaf flower_leaf-2"></div>
+            </div>
+        </div>
+
+        <div class="sunflower">
+            <div class="flower_wrapper">
+                <div class="flower_stem"></div>
+                <div class="flower_center"></div>
+                <div class="flower_petal flower_petal-1"></div>
+                <div class="flower_petal flower_petal-2"></div>
+                <div class="flower_petal flower_petal-3"></div>
+                <div class="flower_petal flower_petal-4"></div>
+                <div class="flower_petal flower_petal-5"></div>
+                <div class="flower_petal flower_petal-6"></div>
+                <div class="flower_petal flower_petal-7"></div>
+                <div class="flower_petal flower_petal-8"></div>
+                <div class="flower_petal flower_petal-9"></div>
+                <div class="flower_petal flower_petal-10"></div>
+                <div class="flower_petal flower_petal-11"></div>
+                <div class="flower_petal flower_petal-12"></div>
+                <div class="flower_leaf flower_leaf-1"></div>
+                <div class="flower_leaf flower_leaf-2"></div>
+            </div>
+        </div>
+
+        <div class="sunflower">
+            <div class="flower_wrapper">
+                <div class="flower_stem"></div>
+                <div class="flower_center"></div>
+                <div class="flower_petal flower_petal-1"></div>
+                <div class="flower_petal flower_petal-2"></div>
+                <div class="flower_petal flower_petal-3"></div>
+                <div class="flower_petal flower_petal-4"></div>
+                <div class="flower_petal flower_petal-5"></div>
+                <div class="flower_petal flower_petal-6"></div>
+                <div class="flower_petal flower_petal-7"></div>
+                <div class="flower_petal flower_petal-8"></div>
+                <div class="flower_petal flower_petal-9"></div>
+                <div class="flower_petal flower_petal-10"></div>
+                <div class="flower_petal flower_petal-11"></div>
+                <div class="flower_petal flower_petal-12"></div>
+                <div class="flower_leaf flower_leaf-1"></div>
+                <div class="flower_leaf flower_leaf-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para iniciar la música cuando el usuario interactúe con la página
+        document.addEventListener('click', function initMusic() {
+            const music = document.getElementById('backgroundMusic');
+            music.play();
+            document.removeEventListener('click', initMusic);
+        }, { once: true });
+
+        // Función para controlar la reproducción de música
+        function toggleMusic() {
+            const music = document.getElementById('backgroundMusic');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+    </script>
+
+    <script type="text/babel">
+        function ValentineBook() {
+            const [isOpen, setIsOpen] = React.useState(false);
+
+            const toggleBook = () => {
+                setIsOpen(!isOpen);
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col items-center justify-center">
+                    <div className="book-container">
+                        <div className={`book ${isOpen ? 'open' : 'closed'}`} onClick={toggleBook}>
+                            <div className="book-cover">
+                                <div className="closed-cover">
+                                    <h1 className="text-xl">Nuestro Libro (toca el libro)</h1>
+                                </div>
+                            </div>
+                            <div className="book-content">
+                                <div className="book-page">
+                                    <div className="page-content">
+                                        <div className="w-full h-4/5 bg-gray-100 rounded-lg overflow-hidden mb-2">
+                                            <img 
+                                                src="luz.jpg"
+                                                alt="Tu foto aquí"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="book-page">
+                                    <div className="page-content">
+                                        <p className="text-gray-800 text-sm italic text-center leading-relaxed font-serif">
+                                            Pueda que solo hablemos debes en cuando,
+                                            pero cada vez que hablo contigo,
+                                            me siento el chico mas feliz, aunque
+                                            no lo sepas, me sacas mas de Una
+                                            sonrisa cada vez que hablamos. 
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ValentineBook />);
+    </script>
+</body>
+</html>
